@@ -6,11 +6,17 @@ include(GNUInstallDirs)
 include(CMakePrintHelpers)
 
 option(BUILD_TESTS "Build unit tests" ON)
+option(BUILD_FUZZER "Build fuzzer" ON)
 
 set(libInterpolate_VERSION
     "UNKNOWN"
     CACHE STRING "Library version number")
 set(libInterpolate_VERSION $CACHE{libInterpolate_VERSION})
+
+if(${BUILD_FUZZER})
+  add_compile_options(-fsanitize=fuzzer-no-link,undefined)
+  add_link_options(-fsanitize=undefined)
+endif()
 
 if(${BUILD_TESTS})
   enable_testing()
@@ -124,3 +130,7 @@ if(libInterpolate_VERSION_PATCH)
   set(CPACK_PACKAGE_VERSION_PATCH ${libInterpolate_VERSION_PATCH})
 endif()
 include(CPack)
+
+if(${BUILD_FUZZER})
+  add_subdirectory(mayhem)
+endif()
