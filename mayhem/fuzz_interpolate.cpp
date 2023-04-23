@@ -1,5 +1,7 @@
+#define NDEBUG  // Ignore assertions
 #include "fuzzer/FuzzedDataProvider.h"
 #include "libInterpolate/Interpolate.hpp"
+#include "libInterpolate/AnyInterpolator.hpp"
 
 
 constexpr const std::size_t min_size = sizeof(float) * 6;
@@ -22,8 +24,21 @@ extern "C" int LLVMFuzzerTestOneInput(uint8_t *data, size_t size) {
 
     auto x = make_random_vector(fdp);
     auto y = make_random_vector(fdp);
-    _1D::CubicSplineInterpolator<double> interp{x,y};
-    interp(fdp.ConsumeFloatingPoint<double>());
+    _1D::AnyInterpolator<double> interp;
+
+    int choice = fdp.ConsumeIntegralInRange(0, 2);
+    switch (choice) {
+        case 0:
+            interp = _1D::LinearInterpolator<double>{x,y};
+            break;
+        case 1:
+            interp = _1D::CubicSplineInterpolator<double>{x,y};
+            break;
+        case 2:
+            interp = _1D::MonotonicInterpolator<double>{x,y};
+            break;
+    }
+    interp(fdp.ConsumeFloatingPointInRange(0.0, 5.0));
 
     return 0;
 }
