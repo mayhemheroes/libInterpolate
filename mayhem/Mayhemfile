@@ -1,0 +1,8 @@
+project: libInterpolate
+target: fuzz-interpolate
+testsuite:
+    - file://mayhem/testsuite
+
+cmds:
+  - cmd: /fuzz_interpolate
+    libfuzzer: true
