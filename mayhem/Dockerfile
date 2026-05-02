@@ -1,5 +1,5 @@
 # Build Stage
-FROM --platform=linux/amd64 ubuntu:22.04 as builder
+FROM --platform=linux/amd64 ubuntu:22.04 AS builder
 
 ## Install build dependencies.
 RUN apt-get update && \
@@ -18,4 +18,4 @@ COPY --from=builder /src/build/mayhem/fuzz_interpolate /fuzz_interpolate
 
 # Set up fuzzing!
 ENTRYPOINT []
-CMD /fuzz_interpolate
+CMD ["/fuzz_interpolate"]
