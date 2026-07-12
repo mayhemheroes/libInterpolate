@@ -1,0 +1,6 @@
+project: mayhemheroes/libInterpolate
+target: fuzz-interpolate
+
+cmds:
+  - cmd: /mayhem/fuzz_interpolate
+    libfuzzer: true
